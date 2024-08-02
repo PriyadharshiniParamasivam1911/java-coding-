@@ -1,0 +1,31 @@
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+public class PascalTriangle {
+    private static final int ROWS = 10;
+    public static void main(String[] args) {
+        ExecutorService executor = Executors.newFixedThreadPool(ROWS);
+        for (int i = 0; i < ROWS; i++) {
+            final int row = i;
+            executor.execute(() -> {
+                synchronized (PascalTriangle.class) {
+                    printRow(row);
+                    try {
+                        Thread.sleep(2000); // 2000ms delay
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            });
+        }
+        executor.shutdown();
+    }
+    private static void printRow(int row) {
+        int number = 1;
+        System.out.print("Row " + (row + 1) + ": ");
+        for (int i = 0; i <= row; i++) {
+            System.out.print(number + " ");
+            number = number * (row - i) / (i + 1);
+        }
+        System.out.println();
+    }
+}
