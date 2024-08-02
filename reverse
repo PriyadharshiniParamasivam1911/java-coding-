@@ -1,0 +1,123 @@
+import java.util.Scanner;
+class reverse {
+    Node head;
+    class Node {
+        int data;
+        Node next;
+        Node(int val) {
+            data = val;
+            next = null;
+        }
+    }
+    public void insertend(int val) {
+        Node newNode = new Node(val);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node temp = head;
+            while (temp.next != null) {
+                temp = temp.next;
+            }
+            temp.next = newNode;
+        }
+    }
+    public void reverse() {
+        if (head == null) {
+            System.out.println("List is empty");
+            return;
+        }
+        Node prev = null;
+        Node current = head;
+        Node next = null;
+        while (current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        head = prev;
+    }
+    public int findMin() {
+        if (head == null) {
+            System.out.println("List is empty");
+            return -1;
+        }
+        int min = head.data;
+        Node temp = head.next;
+        while (temp != null) {
+            if (temp.data < min) {
+                min = temp.data;
+            }
+            temp = temp.next;
+        }
+        return min;
+    }
+    public int findMax() {
+        if (head == null) {
+            System.out.println("List is empty");
+            return -1;
+        }
+        int max = head.data;
+        Node temp = head.next;
+        while (temp != null) {
+            if (temp.data > max) {
+                max = temp.data;
+            }
+            temp = temp.next;
+        }
+        return max;
+    }
+    public boolean search(int val) {
+        Node temp = head;
+        while (temp != null) {
+            if (temp.data == val) {
+                return true;
+            }
+            temp = temp.next;
+        }
+        return false;
+    }
+    public void display() {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + "-->");
+            temp = temp.next;
+        }
+        System.out.println("Null");
+    }
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        reverse list = new reverse();
+        System.out.println("Enter number of elements:");
+        int n = sc.nextInt();
+        System.out.println("Enter the elements:");
+        for (int i = 0; i < n; i++) {
+            int val = sc.nextInt();
+            list.insertend(val);
+        }
+        System.out.println("Original list:");
+        list.display();
+        System.out.println("Reversing the list...");
+        list.reverse();
+        list.display();
+        System.out.println("Reversed list:");
+        list.display();
+        int min = list.findMin();
+        if (min != -1) {
+            System.out.println("Minimum value in the list: " + min);
+        }
+        int max = list.findMax();
+        if (max != -1) {
+            System.out.println("Maximum value in the list: " + max);
+        }
+        System.out.println("Enter value to search:");
+        int searchVal = sc.nextInt();
+        boolean found = list.search(searchVal);
+        if (found) {
+            System.out.println("Value " + searchVal + " found in the list.");
+        } else {
+            System.out.println("Value " + searchVal + " not found in the list.");
+        }
+        sc.close();
+    }
+}
