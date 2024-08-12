@@ -1,0 +1,92 @@
+import java.util.*;
+class TreeNode {
+    int data, height;
+    TreeNode left, right;
+
+    public TreeNode(int val) {
+        data = val;
+        left = right = null;
+        height = 1;
+    }
+}
+class avl {
+    TreeNode create(int data) {
+        return new TreeNode(data);
+    }
+    int height(TreeNode n) {
+        if (n == null)
+            return 0;
+        return n.height;
+    }
+    int getBalance(TreeNode n) {
+        if (n == null)
+            return 0;
+        return height(n.left) - height(n.right);
+    }
+    TreeNode rightRotate(TreeNode y) {
+        TreeNode x = y.left;
+        TreeNode z = x.right;
+        x.right = y;
+        y.left = z;
+        y.height = Math.max(height(y.left), height(y.right)) + 1;
+        x.height = Math.max(height(x.left), height(x.right)) + 1;
+        return x;
+    }
+    TreeNode leftRotate(TreeNode x) {
+        TreeNode y = x.right;
+        TreeNode z = y.left;
+        y.left = x;
+        x.right = z;
+        x.height = Math.max(height(x.left), height(x.right)) + 1;
+        y.height = Math.max(height(y.left), height(y.right)) + 1;
+        return y;
+    }
+    TreeNode insert(TreeNode root, int val) {
+        if (root == null) {
+            return create(val);
+        }
+        if (val < root.data) {
+            root.left = insert(root.left, val);
+        } else if (val > root.data) {
+            root.right = insert(root.right, val);
+        } else {
+            return root;
+        }
+        root.height = 1 + Math.max(height(root.left), height(root.right));
+        int balance = getBalance(root);
+        if (balance > 1 && val < root.left.data)
+            return rightRotate(root);
+        if (balance < -1 && val > root.right.data)
+            return leftRotate(root);
+        if (balance > 1 && val > root.left.data) {
+            root.left = leftRotate(root.left);
+            return rightRotate(root);
+        }
+        if (balance < -1 && val < root.right.data) {
+            root.right = rightRotate(root.right);
+            return leftRotate(root);
+        }
+        return root;
+    }
+    void preOrder(TreeNode root) {
+        if (root != null) {
+            System.out.print(root.data + " ");
+            preOrder(root.left);
+            preOrder(root.right);
+        }
+    }
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        avl tree = new avl();
+        int n = s.nextInt();
+        TreeNode root = tree.create(n);
+        while (true) {
+            int a = s.nextInt();
+            if (a == -1) {
+                break;
+            }
+            root = tree.insert(root,a);
+        }
+        tree.preOrder(root);
+    }
+}
